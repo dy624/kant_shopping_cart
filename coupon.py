@@ -16,17 +16,25 @@ class PercentCoupon(Coupon):
 
 
     def discount_amount(self, total):
-        pass
-        # return 
+        discount = total * self.rate
+
+        if discount >= self.max_discount: 
+            return self.max_discount
+        else:
+            return discount
 
 
 # 금액 할인 쿠폰
 class FixedCoupon(Coupon):
     def __init__(self, amount, min_total):
-        super().__init__(f"쿠폰이름-{min_total}만원이상 {amount}원 할인쿠폰")
+        super().__init__(f"쿠폰이름-{min_total:,}원 이상 {amount:,}원 할인쿠폰")
         self.amount = amount
         self.min_total = min_total
 
     def discount_amount(self, total):
-        pass
+        if total >= self.min_total:
+            return self.amount
+        else:
+            return 0
+        
         #return # 로직구현

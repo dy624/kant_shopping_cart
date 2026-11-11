@@ -1,11 +1,13 @@
 from product import Product
-from coupon import Coupon
+from coupon import  PercentCoupon, FixedCoupon
 
 class Cart:
     def __init__(self):
         # 빈 장바구니 생성
         self.items = {} # {상품 : 수량}
-    
+        self.coupon = None
+
+
     # 장바구니에 상품 담기
     def add(self, product, qty): 
         # 품절 상품은 담을 수 없다.
@@ -59,7 +61,7 @@ class Cart:
 
     # 결제 금액 계산
     def total(self):
-        return self.subtotal() + self.shipping()
+        return self.subtotal() - self.discount() + self.shipping()
 
     # 장바구니 내용 출력
     def show(self):
@@ -75,6 +77,7 @@ class Cart:
 
         print(line)
         print(f"{'상품 합계':<10} {self.subtotal():>15,}원")
+        print(f"{'쿠폰 할인':<10} {self.discount():>15,}원")
         print(f"{'배송비':<10} {self.shipping():>15,}원")
         print(f"{'결제금액':<10} {self.total():>15,}원")
         print(line)
@@ -92,10 +95,24 @@ class Cart:
 
         # 장바구니 비우기
         self.items.clear()
-
+        self.coupon = None
 
         # 결제 성공여부 skip
         print("결제가 완료되었습니다. 감사합니다!!")
+
+    #쿠폰 해보자고
+    def apply_coupon(self, coupon):
+        if self.coupon is not None:
+            print("이미 쿠폰이 적용되어 있습니다.")
+            return
+        self.coupon = coupon
+    #쿠폰 할인금액
+    def discount(self):
+        if self.coupon is None:
+            return 0 
+        return self.coupon.discount_amount(self.subtotal())
+    
+
 
 
 
@@ -112,6 +129,10 @@ cart = Cart()
 cart.add(tumbler, 3)
 cart.add(earphone, 2)
 cart.add(usbhub, 4)
+coupon = PercentCoupon(0.1, 5_000)
+coupon = FixedCoupon(5_000, 30_000)
+cart.apply_coupon(coupon)
+cart.apply_coupon(coupon)
 cart.checkout()
 
 
