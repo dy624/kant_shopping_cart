@@ -1,4 +1,5 @@
 from product import Product
+from coupon import Coupon
 
 class Cart:
     def __init__(self):
@@ -80,6 +81,23 @@ class Cart:
 
 
 
+    def checkout(self):
+        if self.is_empty(): return
+        
+       
+        self.show() 
+        #재고 감소 처리
+        for p, q in self.items.items():
+            p.stock -= q
+
+        # 장바구니 비우기
+        self.items.clear()
+
+
+        # 결제 성공여부 skip
+        print("결제가 완료되었습니다. 감사합니다!!")
+
+
 
 #--------------------------------------------------------
 # 테스트 코드
@@ -91,10 +109,12 @@ usbhub = Product("USB 허브", 20_000, 5)
 
 # 카트 인스턴스 생성
 cart = Cart()
-cart.show()
-cart.add(tumbler, 1)
-cart.show()
+cart.add(tumbler, 3)
 cart.add(earphone, 2)
-cart.show()
 cart.add(usbhub, 4)
-cart.show()
+cart.checkout()
+
+
+print(tumbler)
+print(earphone)
+print(usbhub)
